@@ -3,6 +3,7 @@ steps:
     entrypoint: npm
     args: ["install"]
 
+  # Decrypt the gcloud-env file
   - name: gcr.io/cloud-builders/gcloud
     args:
       - kms
@@ -13,6 +14,7 @@ steps:
       - --keyring=build-ring
       - --key=env-enc-key
 
+  # Decrypt the run env for newman
   - name: gcr.io/cloud-builders/gcloud
     args:
       - kms
@@ -23,6 +25,14 @@ steps:
       - --keyring=build-ring
       - --key=env-enc-key
 
-  - name: "node:10.16.3"
-    entrypoint: npm
-    args: ["start"]
+  # Build docker image
+  - name: "gcr.io/cloud-builders/docker"
+    id: build
+    args:
+      - build
+      - -t
+      - gcr.io/sweng-581-capstone/integration-test-runner:0.0.1
+      - .
+
+images:
+  - "gcr.io/sweng-581-capstone/integration-test-runner:0.0.1"

@@ -1,0 +1,4 @@
+steps:
+  - name: "gcr.io/sweng-581-capstone/integration-test-runner:0.0.1"
+    entrypoint: npm
+    args: ["start"]
