@@ -11,6 +11,6 @@ COPY package*.json ./
 # Install root level production dependencies.
 RUN npm install --only=production
 
-COPY . .
+COPY . ./
 
 ENTRYPOINT [ "npm" ]
