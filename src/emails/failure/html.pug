@@ -1,0 +1,6 @@
+p Hi Book-it Developers,
+p Looks like you have some issues with the current deployment. Thought you would like to know that the following tests have failed:
+
+ul
+    for failure in failures
+        li=`Test: '${failure.source.name}', failed with error '${failure.error.name}'' for test '${failure.error.test}'`

@@ -1,0 +1,28 @@
+steps:
+  - name: "node:10.16.3"
+    entrypoint: npm
+    args: ["install"]
+
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=gcloud-env.yaml.enc
+      - --plaintext-file=gcloud-env.yaml
+      - --location=global
+      - --keyring=build-ring
+      - --key=env-enc-key
+
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=run-env.json.enc
+      - --plaintext-file=run-env.json
+      - --location=global
+      - --keyring=build-ring
+      - --key=env-enc-key
+
+  - name: "node:10.16.3"
+    entrypoint: npm
+    args: ["start"]
