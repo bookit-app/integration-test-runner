@@ -414,6 +414,60 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Not Authorized to update Service Provider Offering",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "511b7e50-51e5-48f0-8c1c-829dd38ec6a1",
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"description\": \"UPDATED DESCRIPTION\",\n  \"price\": 25,\n  \"currency\": \"USD\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://esp-vllmtwjp2a-uc.a.run.app/provider/{{providerId}}/services/{{serviceId}}",
+									"protocol": "https",
+									"host": [
+										"esp-vllmtwjp2a-uc",
+										"a",
+										"run",
+										"app"
+									],
+									"path": [
+										"provider",
+										"{{providerId}}",
+										"services",
+										"{{serviceId}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"auth": {
@@ -2416,6 +2470,62 @@
 											"name": "User should be able to search for and find the provider created",
 											"item": [
 												{
+													"name": "Access Token",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+																"exec": [
+																	"var jsonData = pm.response.json();",
+																	"pm.environment.set(\"idToken\", jsonData.idToken);"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"email\": \"{{testUserEmail}}\",\n\t\"password\": \"{{testUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+															"protocol": "https",
+															"host": [
+																"identitytoolkit",
+																"googleapis",
+																"com"
+															],
+															"path": [
+																"v1",
+																"accounts:signInWithPassword"
+															],
+															"query": [
+																{
+																	"key": "key",
+																	"value": "{{API-KEY}}"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
 													"name": "Search by zip code",
 													"event": [
 														{
@@ -2968,6 +3078,244 @@
 															""
 														]
 													}
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should be able to update service offerings",
+											"item": [
+												{
+													"name": "Access Token",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+																"exec": [
+																	"var jsonData = pm.response.json();",
+																	"pm.environment.set(\"idToken\", jsonData.idToken);"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"email\": \"{{testUserEmail}}\",\n\t\"password\": \"{{testUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+															"protocol": "https",
+															"host": [
+																"identitytoolkit",
+																"googleapis",
+																"com"
+															],
+															"path": [
+																"v1",
+																"accounts:signInWithPassword"
+															],
+															"query": [
+																{
+																	"key": "key",
+																	"value": "{{API-KEY}}"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Load the FADE service",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "5d13f304-6ce7-4d60-9b1b-dce6a6b2d35c",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should have a FADE service', () => {",
+																	"   const data = pm.response.json();",
+																	"   pm.expect(data).to.include.keys(\"services\");",
+																	"   pm.expect(data.services.find((item)=>item.styleId === 'FADE')).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"const fade = pm.response.json().services.find((item)=>item.styleId === 'FADE');",
+																	"pm.environment.set(\"serviceId\", fade.serviceId);"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/provider/{{providerId}}",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"provider",
+																"{{providerId}}"
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Update Service Provider Offering",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "511b7e50-51e5-48f0-8c1c-829dd38ec6a1",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "PATCH",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"description\": \"UPDATED DESCRIPTION\",\n  \"price\": 25,\n  \"currency\": \"USD\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/provider/{{providerId}}/services/{{serviceId}}",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"provider",
+																"{{providerId}}",
+																"services",
+																"{{serviceId}}"
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Verify Service Offering has been updated",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "5d13f304-6ce7-4d60-9b1b-dce6a6b2d35c",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should have a FADE service', () => {",
+																	"   const data = pm.response.json();",
+																	"   pm.expect(data).to.include.keys(\"services\");",
+																	"   ",
+																	"   const fade = data.services.find((item)=>item.styleId === 'FADE');",
+																	"   pm.expect(fade).to.not.be.undefined;",
+																	"   pm.expect(fade.description).to.equal(\"UPDATED DESCRIPTION\");",
+																	"   pm.expect(fade.price).to.equal(25);",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/provider/{{providerId}}",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"provider",
+																"{{providerId}}"
+															]
+														}
+													},
+													"response": []
 												}
 											],
 											"protocolProfileBehavior": {},
