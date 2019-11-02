@@ -1,6 +1,20 @@
 p Hi Book-it Developers,
-p Looks like you have some issues with the current deployment. Thought you would like to know that the following tests have failed:
+p Looks like you have some issues with the current deployment. 
 
+P Stats
+
+ul
+    li=`Collection Name: ${collection}`
+    li=`Total Tests: ${executions}`
+    li=`Number of Failures: ${failures.length}`
+    li='Response times:'
+        ul
+            li= `Min: ${timings.responseMin}`
+            li= `Average: ${timings.responseAverage}`
+            li= `Max: ${timings.responseMax}`
+            li= `Standard Deviation: ${timings.responseSd}`
+
+P The following tests have failed:
 ul
     for failure in failures
         li=`Test: '${failure.source.name}', failed with error '${failure.error.name}'' for test '${failure.error.test}'`

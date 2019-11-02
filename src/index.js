@@ -23,7 +23,7 @@ newman
   })
   .on('done', async (err, summary) => {
     if (summary.run.failures.length > 0) {
-      await processFailures(summary.run.failures);
+      await processFailures(summary);
       process.exit(1);
     }
 
@@ -35,7 +35,7 @@ newman
     console.log('collection run completed.');
   });
 
-function processFailures(failures) {
+function processFailures(summary) {
   const properties = yaml.safeLoad(
     fs.readFileSync(path.join(__dirname, '..', 'gcloud-env.yaml'), 'utf8')
   );
@@ -56,7 +56,10 @@ function processFailures(failures) {
         to: properties.developers
       },
       locals: {
-        failures: failures
+        collection: summary.collection.name,
+        executions: summary.run.executions.length,
+        failures: summary.run.failures,
+        timings: summary.run.timings        
       }
     })
     .then(console.log)

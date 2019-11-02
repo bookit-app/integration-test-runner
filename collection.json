@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "67adc286-8d61-4850-9f1e-82af611837ea",
+		"_postman_id": "4ad9c7cf-d840-4928-9f9b-57c1ba5897d1",
 		"name": "bookit-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -2223,7 +2223,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n  \"description\": \"Test Service Offering\",\n  \"price\": 10,\n  \"currency\": \"USD\",\n  \"styleId\": \"FADE\"\n}",
+															"raw": "{\n  \"description\": \"Test Service Offering\",\n  \"price\": 5,\n  \"currency\": \"USD\",\n  \"styleId\": \"FADE\"\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -2359,7 +2359,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n  \"description\": \"Test Service Offering\",\n  \"price\": 5,\n  \"currency\": \"USD\"\n}",
+															"raw": "{\n  \"description\": \"Test Service Offering\",\n  \"price\": 75,\n  \"currency\": \"USD\"\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -3056,6 +3056,635 @@
 														}
 													},
 													"response": []
+												},
+												{
+													"name": "Search by price range $ - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $ price range and 2 others', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(3)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$ - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $$ price range and 2 others', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(3)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$$ - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should not have and offerings in the $$$ price range', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.not.include('$$$');",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$$",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$$"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$$$ - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have and offerings in the $$$$ price range', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$$$$');",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$$$",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$$$"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $ price range for FADE and no others', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(1)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$&styles=FADE",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$"
+																},
+																{
+																	"key": "styles",
+																	"value": "FADE"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $ and Style = UPDO - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should not be found because there are no UPDO styles in the price range', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.be.undefined;",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$&styles=UPDO",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$"
+																},
+																{
+																	"key": "styles",
+																	"value": "UPDO"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $ price range for FADE', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(1)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$&styles=FADE",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$"
+																},
+																{
+																	"key": "styles",
+																	"value": "FADE"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$ and Style = UPDO - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $$ price range for UPDO', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(1)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$&styles=UPDO",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$"
+																},
+																{
+																	"key": "styles",
+																	"value": "UPDO"
+																}
+															]
+														}
+													},
+													"response": []
 												}
 											],
 											"event": [
@@ -3312,6 +3941,161 @@
 															"path": [
 																"provider",
 																"{{providerId}}"
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should not be found as FADE price range has increased', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.be.undefined;",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$&styles=FADE",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$"
+																},
+																{
+																	"key": "styles",
+																	"value": "FADE"
+																}
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "6480cfc9-76c3-420b-9aa2-35f81b133f70",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test('Provider should be found as FADE is now within the price range', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"});",
+																	"",
+																	"pm.test('Provider should have offerings in the $$ price range for FADE', () => {",
+																	"   const data = pm.response.json();",
+																	"   const provider = data.find((item)=>item.providerId === pm.environment.get(\"providerId\"));",
+																	"   pm.expect(provider).to.not.be.undefined;",
+																	"   pm.expect(provider.priceRanges).to.include('$$');",
+																	"   pm.expect(provider.priceRanges.length).to.equal(1)",
+																	"});",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/search/provider?state=TC&priceRange=$$&styles=FADE",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"search",
+																"provider"
+															],
+															"query": [
+																{
+																	"key": "state",
+																	"value": "TC"
+																},
+																{
+																	"key": "priceRange",
+																	"value": "$$"
+																},
+																{
+																	"key": "styles",
+																	"value": "FADE"
+																}
 															]
 														}
 													},
