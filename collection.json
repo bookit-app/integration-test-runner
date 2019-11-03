@@ -4255,6 +4255,58 @@
 														}
 													},
 													"response": []
+												},
+												{
+													"name": "User profile should have isProvider = false",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "38a628d5-03fd-48f3-9c1b-ea7a63887154",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test(\"Response should have profile with isProvider === false\", function () {",
+																	"    const data = pm.response.json();",
+																	"    pm.expect(data).to.include.keys(\"isProvider\");",
+																	"    pm.expect(data.isProvider).to.be.false;",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{idToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "https://esp-vllmtwjp2a-uc.a.run.app/profile/1",
+															"protocol": "https",
+															"host": [
+																"esp-vllmtwjp2a-uc",
+																"a",
+																"run",
+																"app"
+															],
+															"path": [
+																"profile",
+																"1"
+															]
+														}
+													},
+													"response": []
 												}
 											],
 											"protocolProfileBehavior": {},
