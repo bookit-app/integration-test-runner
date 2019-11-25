@@ -14,7 +14,7 @@ newman
   .run({
     collection: require('../collection.json'),
     environment: require('../run-env.json'),
-    delayRequest: 500,
+    delayRequest: 250,
     reporters: 'cli'
   })
   .on('start', function(err, args) {
