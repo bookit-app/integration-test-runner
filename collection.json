@@ -2120,7 +2120,15 @@
 																	"pm.test(\"Response should contain the location header\", function () {",
 																	"    const headerList = pm.response.headers;",
 																	"    pm.expect(headerList.has('location'))",
-																	"});"
+																	"});",
+																	"",
+																	"// Populate the ID to the env. Pull from location header and split it at /services/[1]",
+																	"const headerList = pm.response.headers;",
+																	"const locationHeader = headerList.get('location');",
+																	"if(locationHeader){",
+																	"    const providerId = locationHeader.split('/services/')[1];",
+																	"    pm.environment.set(\"serviceOffering-FADE\", providerId);",
+																	"}"
 																],
 																"type": "text/javascript"
 															}
@@ -4087,7 +4095,7 @@
 																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
 																"exec": [
 																	"var jsonData = pm.response.json();",
-																	"pm.environment.set(\"idToken\", jsonData.idToken);"
+																	"pm.environment.set(\"staffMemberIdToken\", jsonData.idToken);"
 																],
 																"type": "text/javascript"
 															}
@@ -4680,20 +4688,40 @@
 											],
 											"protocolProfileBehavior": {},
 											"_postman_isSubFolder": true
-										},
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "Appointments",
+									"item": [
 										{
-											"name": "User should be able to delete the provider",
+											"name": "Create Client User",
 											"item": [
 												{
-													"name": "Access Token",
+													"name": "Create User",
 													"event": [
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "ad0a89fe-a028-4418-9c93-8e559f649fe2",
+																"exec": [
+																	"var {v4} = require('uuid');",
+																	"pm.environment.set(\"clientUserPassword\", v4());"
+																],
+																"type": "text/javascript"
+															}
+														},
 														{
 															"listen": "test",
 															"script": {
-																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+																"id": "55f50383-7a9b-4ff0-a1b2-d52d6c31b8e8",
 																"exec": [
 																	"var jsonData = pm.response.json();",
-																	"pm.environment.set(\"idToken\", jsonData.idToken);"
+																	"pm.environment.set(\"clientUserEmail\", jsonData.email);",
+																	"pm.environment.set(\"clientUserIdToken\", jsonData.idToken);",
+																	"pm.environment.set(\"clientUserId\", jsonData.localId)"
 																],
 																"type": "text/javascript"
 															}
@@ -4711,7 +4739,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"email\": \"{{testUserEmail}}\",\n\t\"password\": \"{{testUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+															"raw": "{\n\t\"email\": \"{{$randomEmail}}\",\n\t\"password\": \"{{clientUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -4719,7 +4747,7 @@
 															}
 														},
 														"url": {
-															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API-KEY}}",
 															"protocol": "https",
 															"host": [
 																"identitytoolkit",
@@ -4728,7 +4756,7 @@
 															],
 															"path": [
 																"v1",
-																"accounts:signInWithPassword"
+																"accounts:signUp"
 															],
 															"query": [
 																{
@@ -4741,107 +4769,15 @@
 													"response": []
 												},
 												{
-													"name": "User can delete the service provider",
+													"name": "Create a Profile",
 													"event": [
 														{
 															"listen": "test",
 															"script": {
-																"id": "71759c29-4287-4bef-b3cd-8a1f819ffb3c",
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
 																"exec": [
-																	"pm.test(\"Status code is 204\", function () {",
-																	"    pm.response.to.have.status(204);",
-																	"});"
-																],
-																"type": "text/javascript"
-															}
-														}
-													],
-													"request": {
-														"auth": {
-															"type": "bearer",
-															"bearer": [
-																{
-																	"key": "token",
-																	"value": "{{idToken}}",
-																	"type": "string"
-																}
-															]
-														},
-														"method": "DELETE",
-														"header": [],
-														"url": {
-															"raw": "https://{{HOST_NAME}}/provider/{{providerId}}",
-															"protocol": "https",
-															"host": [
-																"{{HOST_NAME}}"
-															],
-															"path": [
-																"provider",
-																"{{providerId}}"
-															]
-														}
-													},
-													"response": []
-												},
-												{
-													"name": "Provider should not longer exist",
-													"event": [
-														{
-															"listen": "test",
-															"script": {
-																"id": "0513317a-3b59-4011-90ba-6a9a5f91eb2b",
-																"exec": [
-																	"pm.test(\"Status code is 404\", function () {",
-																	"    pm.response.to.have.status(404);",
-																	"});"
-																],
-																"type": "text/javascript"
-															}
-														}
-													],
-													"request": {
-														"auth": {
-															"type": "bearer",
-															"bearer": [
-																{
-																	"key": "token",
-																	"value": "{{idToken}}",
-																	"type": "string"
-																}
-															]
-														},
-														"method": "GET",
-														"header": [],
-														"url": {
-															"raw": "https://{{HOST_NAME}}/provider/{{providerId}}",
-															"protocol": "https",
-															"host": [
-																"{{HOST_NAME}}"
-															],
-															"path": [
-																"provider",
-																"{{providerId}}"
-															]
-														}
-													},
-													"response": []
-												},
-												{
-													"name": "User profile should have isProvider = false",
-													"event": [
-														{
-															"listen": "test",
-															"script": {
-																"id": "38a628d5-03fd-48f3-9c1b-ea7a63887154",
-																"exec": [
-																	"pm.test(\"Status code is 200\", function () {",
-																	"    pm.response.to.have.status(200);",
-																	"});",
-																	"",
-																	"pm.test(\"Response should have profile with isProvider === false\", function () {",
-																	"    const data = pm.response.json();",
-																	"    pm.expect(data).to.include.keys(\"isProvider\");",
-																	"    pm.expect(data.isProvider).to.be.false;",
+																	"pm.test(\"Status code is 201\", function () {",
+																	"    pm.response.to.have.status(201);",
 																	"});"
 																],
 																"type": "text/javascript"
@@ -4850,11 +4786,19 @@
 														{
 															"listen": "prerequest",
 															"script": {
-																"id": "02972d07-3c8d-4a9e-a0af-dc713fdde09d",
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
 																"exec": [
-																	"setTimeout(() => {",
-																	"    console.log(\"Timeout exceeded attempting request\")",
-																	"}, 15000);"
+																	"pm.environment.set(\"random_day\", _.random(0, 6))",
+																	"pm.environment.set(\"random_birthday\", `${_.random(1975, 2005)}-${_.random(10, 12)}-${_.random(10, 28)}`)",
+																	"pm.environment.set(\"random_phone\", `${_.random(100, 999)}-${_.random(100, 999)}-${_.random(1000, 9999)}`)",
+																	"",
+																	"if(_.random(1, 10) >= 5){",
+																	"    pm.environment.set(\"random_gender\", 'M');",
+																	"}",
+																	"else{",
+																	"    pm.environment.set(\"random_gender\", 'F');",
+																	"}",
+																	""
 																],
 																"type": "text/javascript"
 															}
@@ -4866,22 +4810,37 @@
 															"bearer": [
 																{
 																	"key": "token",
-																	"value": "{{idToken}}",
+																	"value": "{{clientUserIdToken}}",
 																	"type": "string"
 																}
 															]
 														},
-														"method": "GET",
-														"header": [],
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"firstName\": \"{{$randomFirstName}}\",\n\t\"lastName\": \"{{$randomLastName}}\",\n    \"address\": {\n        \"city\": \"West Chester\",\n        \"state\": \"PA\",\n        \"streetAddress\": \"1234 High Street\",\n        \"zip\": \"12345\"\n    },\n    \"birthday\": \"{{random_birthday}}\",\n    \"email\": \"{{clientUserEmail}}\",\n    \"gender\": \"{{random_gender}}\",\n    \"phoneNumber\": \"{{random_phone}}\",\n    \"isProvider\": false,\n    \"preferences\": {\n    \t\"city\": \"West Chester\",\n    \t\"day\": {{random_day}},\n    \t\"state\": \"PA\"\n    }\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
 														"url": {
-															"raw": "https://{{HOST_NAME}}/profile/1",
+															"raw": "https://{{HOST_NAME}}/profile",
 															"protocol": "https",
 															"host": [
 																"{{HOST_NAME}}"
 															],
 															"path": [
-																"profile",
-																"1"
+																"profile"
 															]
 														}
 													},
@@ -4892,36 +4851,78 @@
 											"_postman_isSubFolder": true
 										},
 										{
-											"name": "Delete Staff Member Information",
+											"name": "User should be able Create a new appointment",
 											"item": [
 												{
-													"name": "Access Token for Staff Member",
+													"name": "Create a Appointment",
 													"event": [
 														{
 															"listen": "test",
 															"script": {
-																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
 																"exec": [
-																	"var jsonData = pm.response.json();",
-																	"pm.environment.set(\"staffMemberIdToken\", jsonData.idToken);"
+																	"pm.test(\"Status code is 201\", function () {",
+																	"    pm.response.to.have.status(201);",
+																	"});",
+																	"",
+																	"// Populate the ID to the env. Pull from location header and split it at /appointments/[1]",
+																	"const headerList = pm.response.headers;",
+																	"const locationHeader = headerList.get('location');",
+																	"if(locationHeader){",
+																	"    const providerId = locationHeader.split('/appointments/')[1];",
+																	"    pm.environment.set(\"appointmentId\", providerId);",
+																	"}"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	"pm.environment.set(\"random_day\", _.random(0, 6))",
+																	"pm.environment.set(\"random_birthday\", `${_.random(1975, 2005)}-${_.random(10, 12)}-${_.random(10, 28)}`)",
+																	"pm.environment.set(\"random_phone\", `${_.random(100, 999)}-${_.random(100, 999)}-${_.random(1000, 9999)}`)",
+																	"",
+																	"if(_.random(1, 10) >= 5){",
+																	"    pm.environment.set(\"random_gender\", 'M');",
+																	"}",
+																	"else{",
+																	"    pm.environment.set(\"random_gender\", 'F');",
+																	"}",
+																	"",
+																	"const d = new Date();",
+																	"pm.environment.set(\"appointment_date\", `${d.getFullYear()}-${d.getMonth() + 1}-${d.toLocaleDateString('en-US', { day: '2-digit' })}`)",
+																	""
 																],
 																"type": "text/javascript"
 															}
 														}
 													],
 													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
 														"method": "POST",
 														"header": [
 															{
 																"key": "Content-Type",
 																"name": "Content-Type",
-																"value": "application/json",
-																"type": "text"
+																"type": "text",
+																"value": "application/json"
 															}
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"email\": \"{{testStaffMemberUserEmail}}\",\n\t\"password\": \"{{testStaffMemberUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+															"raw": "{\n  \"date\": \"{{appointment_date}}\",\n  \"providerId\": \"{{providerId}}\",\n  \"staffMemberId\": \"{{staffMemberUserId}}\",\n  \"time\": \"11:00:00\",\n  \"serviceId\": \"{{serviceOffering-FADE}}\"\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -4929,21 +4930,182 @@
 															}
 														},
 														"url": {
-															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+															"raw": "https://{{HOST_NAME}}/appointments",
 															"protocol": "https",
 															"host": [
-																"identitytoolkit",
-																"googleapis",
-																"com"
+																"{{HOST_NAME}}"
 															],
 															"path": [
-																"v1",
-																"accounts:signInWithPassword"
+																"appointments"
+															]
+														}
+													},
+													"response": []
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should not be able to book an appointment for an already booked timeslot",
+											"item": [
+												{
+													"name": "Create a Appointment",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
+																"exec": [
+																	"pm.test(\"Status code is 201\", function () {",
+																	"    pm.response.to.have.status(201);",
+																	"});",
+																	"",
+																	"// Populate the ID to the env. Pull from location header and split it at /appointments/[1]",
+																	"const headerList = pm.response.headers;",
+																	"const locationHeader = headerList.get('location');",
+																	"if(locationHeader){",
+																	"    const providerId = locationHeader.split('/appointments/')[1];",
+																	"    pm.environment.set(\"appointmentId\", providerId);",
+																	"}"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"date\": \"{{appointment_date}}\",\n  \"providerId\": \"{{providerId}}\",\n  \"staffMemberId\": \"{{staffMemberUserId}}\",\n  \"time\": \"11:00:00\",\n  \"serviceId\": \"{{serviceOffering-FADE}}\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "https://{{HOST_NAME}}/appointments",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"appointments"
+															]
+														}
+													},
+													"response": []
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should be able to find their appointments",
+											"item": [
+												{
+													"name": "Search for My Appointments for the provider and staff member",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test(\"Should have the one appointment that was created\", function() {",
+																	"    const data = pm.response.json();",
+																	"    pm.expect(data.length).to.be.gt(0);",
+																	"    pm.expect(data.find(appointment => appointment.appointmentId === pm.environment.get('appointmentId'))).to.not.be.undefined;",
+																	"})"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://{{HOST_NAME}}/search/appointments?mine=true&providerId={{providerId}}&staffMemberId={{staffMemberUserId}}",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"search",
+																"appointments"
 															],
 															"query": [
 																{
-																	"key": "key",
-																	"value": "{{API-KEY}}"
+																	"key": "mine",
+																	"value": "true"
+																},
+																{
+																	"key": "providerId",
+																	"value": "{{providerId}}"
+																},
+																{
+																	"key": "staffMemberId",
+																	"value": "{{staffMemberUserId}}"
 																}
 															]
 														}
@@ -4951,15 +5113,102 @@
 													"response": []
 												},
 												{
-													"name": "Delete Profile",
+													"name": "Search for My Appointments by date range",
 													"event": [
 														{
 															"listen": "test",
 															"script": {
-																"id": "93cddacd-e3bd-4c14-b27c-0a14b38b119d",
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
 																"exec": [
-																	"pm.test(\"Status code is 204\", function () {",
-																	"    pm.response.to.have.status(204);",
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test(\"Should have the one appointment that was created\", function() {",
+																	"    const data = pm.response.json();",
+																	"    pm.expect(data.length).to.be.gt(0);",
+																	"    pm.expect(data.find(appointment => appointment.appointmentId === pm.environment.get('appointmentId'))).to.not.be.undefined;",
+																	"})"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://{{HOST_NAME}}/search/appointments?mine=true&fromDate={{appointment_date}}&toDate={{appointment_date}}",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"search",
+																"appointments"
+															],
+															"query": [
+																{
+																	"key": "mine",
+																	"value": "true"
+																},
+																{
+																	"key": "fromDate",
+																	"value": "{{appointment_date}}"
+																},
+																{
+																	"key": "toDate",
+																	"value": "{{appointment_date}}"
+																}
+															]
+														}
+													},
+													"response": []
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "Staff member should be able to change the status on an appointment",
+											"item": [
+												{
+													"name": "Set appointment status to delayed with a comment",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "ec014367-2e29-42ba-b088-1e4e65b2e324",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
 																	"});"
 																],
 																"type": "text/javascript"
@@ -4977,40 +5226,7 @@
 																}
 															]
 														},
-														"method": "DELETE",
-														"header": [],
-														"url": {
-															"raw": "https://{{HOST_NAME}}/profile/1",
-															"protocol": "https",
-															"host": [
-																"{{HOST_NAME}}"
-															],
-															"path": [
-																"profile",
-																"1"
-															]
-														}
-													},
-													"response": []
-												},
-												{
-													"name": "Delete User",
-													"event": [
-														{
-															"listen": "test",
-															"script": {
-																"id": "0ce2339b-0138-4da2-ad90-34f89a8b03dd",
-																"exec": [
-																	"pm.test(\"Status code is 200\", function () {",
-																	"    pm.response.to.have.status(200);",
-																	"});"
-																],
-																"type": "text/javascript"
-															}
-														}
-													],
-													"request": {
-														"method": "POST",
+														"method": "PATCH",
 														"header": [
 															{
 																"key": "Content-Type",
@@ -5021,7 +5237,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"idToken\": \"{{staffMemberIdToken}}\"\n}",
+															"raw": "{\n  \"status\": {\n    \"code\": \"DELAYED\",\n    \"comment\": \"Current appointment is a few minutes over sorry for the wait\"\n  }\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -5029,56 +5245,76 @@
 															}
 														},
 														"url": {
-															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:delete?key={{API-KEY}}",
+															"raw": "https://{{HOST_NAME}}/appointments/{{appointmentId}}",
 															"protocol": "https",
 															"host": [
-																"identitytoolkit",
-																"googleapis",
-																"com"
+																"{{HOST_NAME}}"
 															],
 															"path": [
-																"v1",
-																"accounts:delete"
-															],
-															"query": [
-																{
-																	"key": "key",
-																	"value": "{{API-KEY}}"
-																}
+																"appointments",
+																"{{appointmentId}}"
 															]
 														}
 													},
 													"response": []
+												}
+											],
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"id": "9d78f2bc-0c84-483c-bf84-f03a542eeded",
+														"type": "text/javascript",
+														"exec": [
+															""
+														]
+													}
 												},
 												{
-													"name": "Verify User cannot get a new token",
+													"listen": "test",
+													"script": {
+														"id": "24a64545-76eb-483f-9f67-374a5e7a042c",
+														"type": "text/javascript",
+														"exec": [
+															""
+														]
+													}
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should be able to add a note to an appointment",
+											"item": [
+												{
+													"name": "Set a note on the appointment",
 													"event": [
 														{
 															"listen": "test",
 															"script": {
-																"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+																"id": "03de83a7-332b-4bea-83cf-f2e6e606ea63",
 																"exec": [
-																	"pm.test(\"Status code is 400\", function () {",
-																	"    pm.response.to.have.status(400);",
-																	"});",
-																	"",
-																	"pm.test(\"Error code should me EMAIL_NOT_FOUND\", function () {",
-																	"    const data = pm.response.json();",
-																	"    pm.expect(data.error.message).to.equal('EMAIL_NOT_FOUND')",
-																	"});",
-																	"",
-																	"pm.environment.set(\"staffMemberUserId\", '');",
-																	"pm.environment.set(\"staffMembershiptRequestId\", '');",
-																	"pm.environment.set(\"testStaffMemberUserEmail\", '');",
-																	"pm.environment.set(\"staffMemberIdToken\", '');",
-																	"pm.environment.set(\"testStaffMemberUserPassword\", '');"
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});"
 																],
 																"type": "text/javascript"
 															}
 														}
 													],
 													"request": {
-														"method": "POST",
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "PATCH",
 														"header": [
 															{
 																"key": "Content-Type",
@@ -5089,7 +5325,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"email\": \"{{testStaffMemberUserEmail}}\",\n\t\"password\": \"{{testStaffMemberUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+															"raw": "{\n  \"note\": \"Might take alittle longer as my hair is pretty long\"\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -5097,21 +5333,237 @@
 															}
 														},
 														"url": {
-															"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+															"raw": "https://{{HOST_NAME}}/appointments/{{appointmentId}}",
 															"protocol": "https",
 															"host": [
-																"identitytoolkit",
-																"googleapis",
-																"com"
+																"{{HOST_NAME}}"
 															],
 															"path": [
-																"v1",
-																"accounts:signInWithPassword"
+																"appointments",
+																"{{appointmentId}}"
+															]
+														}
+													},
+													"response": []
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should be able to find existing appointments for a provider",
+											"item": [
+												{
+													"name": "Search for My Appointments for the provider and staff member",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test(\"Should have the one appointment that was created\", function() {",
+																	"    const data = pm.response.json();",
+																	"    pm.expect(data.length).to.be.gt(0);",
+																	"})"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://{{HOST_NAME}}/search/appointments?providerId={{providerId}}",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"search",
+																"appointments"
 															],
 															"query": [
 																{
-																	"key": "key",
-																	"value": "{{API-KEY}}"
+																	"key": "providerId",
+																	"value": "{{providerId}}"
+																}
+															]
+														}
+													},
+													"response": []
+												}
+											],
+											"protocolProfileBehavior": {},
+											"_postman_isSubFolder": true
+										},
+										{
+											"name": "User should be able to cancel an appointment",
+											"item": [
+												{
+													"name": "Cancel the appointment",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "201f549a-f87a-4af3-b767-877e9870b3dd",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});"
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "PATCH",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"state\": \"CANCELLED\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "https://{{HOST_NAME}}/appointments/{{appointmentId}}",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"appointments",
+																"{{appointmentId}}"
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "Appointment should no longer exist",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
+																"exec": [
+																	"pm.test(\"Status code is 200\", function () {",
+																	"    pm.response.to.have.status(200);",
+																	"});",
+																	"",
+																	"pm.test(\"Should have the one appointment that was created\", function() {",
+																	"    const data = pm.response.json();",
+																	"    pm.expect(data.length).to.be.gt(0);",
+																	"    pm.expect(data.find(appointment => appointment.appointmentId === pm.environment.get('appointmentId'))).to.be.undefined;",
+																	"})"
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"auth": {
+															"type": "bearer",
+															"bearer": [
+																{
+																	"key": "token",
+																	"value": "{{clientUserIdToken}}",
+																	"type": "string"
+																}
+															]
+														},
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"name": "Content-Type",
+																"type": "text",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "https://{{HOST_NAME}}/search/appointments?mine=true&providerId={{providerId}}&staffMemberId={{staffMemberUserId}}",
+															"protocol": "https",
+															"host": [
+																"{{HOST_NAME}}"
+															],
+															"path": [
+																"search",
+																"appointments"
+															],
+															"query": [
+																{
+																	"key": "mine",
+																	"value": "true"
+																},
+																{
+																	"key": "providerId",
+																	"value": "{{providerId}}"
+																},
+																{
+																	"key": "staffMemberId",
+																	"value": "{{staffMemberUserId}}"
 																}
 															]
 														}
@@ -5133,6 +5585,677 @@
 						{
 							"name": "Teardown",
 							"item": [
+								{
+									"name": "Delete Staff Member Information",
+									"item": [
+										{
+											"name": "Access Token for Staff Member",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+														"exec": [
+															"var jsonData = pm.response.json();",
+															"pm.environment.set(\"staffMemberIdToken\", jsonData.idToken);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"{{testStaffMemberUserEmail}}\",\n\t\"password\": \"{{testStaffMemberUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:signInWithPassword"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Profile",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "93cddacd-e3bd-4c14-b27c-0a14b38b119d",
+														"exec": [
+															"pm.test(\"Status code is 204\", function () {",
+															"    pm.response.to.have.status(204);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{staffMemberIdToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "https://{{HOST_NAME}}/profile/1",
+													"protocol": "https",
+													"host": [
+														"{{HOST_NAME}}"
+													],
+													"path": [
+														"profile",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete User",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "0ce2339b-0138-4da2-ad90-34f89a8b03dd",
+														"exec": [
+															"pm.test(\"Status code is 200\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"idToken\": \"{{staffMemberIdToken}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:delete?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:delete"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Verify User cannot get a new token",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+														"exec": [
+															"pm.test(\"Status code is 400\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Error code should me EMAIL_NOT_FOUND\", function () {",
+															"    const data = pm.response.json();",
+															"    pm.expect(data.error.message).to.equal('EMAIL_NOT_FOUND')",
+															"});",
+															"",
+															"pm.environment.set(\"staffMemberUserId\", '');",
+															"pm.environment.set(\"staffMembershiptRequestId\", '');",
+															"pm.environment.set(\"testStaffMemberUserEmail\", '');",
+															"pm.environment.set(\"staffMemberIdToken\", '');",
+															"pm.environment.set(\"testStaffMemberUserPassword\", '');"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"type": "text",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"{{testStaffMemberUserEmail}}\",\n\t\"password\": \"{{testStaffMemberUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:signInWithPassword"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "Delete Client Information",
+									"item": [
+										{
+											"name": "Access Token for Client",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+														"exec": [
+															"var jsonData = pm.response.json();",
+															"pm.environment.set(\"clientUserIdToken\", jsonData.idToken);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"type": "text",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"{{clientUserEmail}}\",\n\t\"password\": \"{{clientUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:signInWithPassword"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Profile",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "93cddacd-e3bd-4c14-b27c-0a14b38b119d",
+														"exec": [
+															"pm.test(\"Status code is 204\", function () {",
+															"    pm.response.to.have.status(204);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{clientUserIdToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "https://{{HOST_NAME}}/profile/1",
+													"protocol": "https",
+													"host": [
+														"{{HOST_NAME}}"
+													],
+													"path": [
+														"profile",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete User",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "0ce2339b-0138-4da2-ad90-34f89a8b03dd",
+														"exec": [
+															"pm.test(\"Status code is 200\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"idToken\": \"{{clientUserIdToken}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:delete?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:delete"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Verify User cannot get a new token",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+														"exec": [
+															"pm.test(\"Status code is 400\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Error code should me EMAIL_NOT_FOUND\", function () {",
+															"    const data = pm.response.json();",
+															"    pm.expect(data.error.message).to.equal('EMAIL_NOT_FOUND')",
+															"});",
+															"",
+															"pm.environment.set(\"clientUserEmail\", '');",
+															"pm.environment.set(\"clientUserEmail\", '');",
+															"pm.environment.set(\"clientUserIdToken\", '');",
+															"pm.environment.set(\"clientUserPassword\", '');"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"type": "text",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"{{clientUserEmail}}\",\n\t\"password\": \"{{clientUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:signInWithPassword"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "User should be able to delete the provider",
+									"item": [
+										{
+											"name": "Access Token",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "48828a88-d728-4af9-b812-bb9cbe6a79a2",
+														"exec": [
+															"var jsonData = pm.response.json();",
+															"pm.environment.set(\"idToken\", jsonData.idToken);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"name": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"{{testUserEmail}}\",\n\t\"password\": \"{{testUserPassword}}\",\n\t\"returnSecureToken\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{API-KEY}}",
+													"protocol": "https",
+													"host": [
+														"identitytoolkit",
+														"googleapis",
+														"com"
+													],
+													"path": [
+														"v1",
+														"accounts:signInWithPassword"
+													],
+													"query": [
+														{
+															"key": "key",
+															"value": "{{API-KEY}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "User can delete the service provider",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "71759c29-4287-4bef-b3cd-8a1f819ffb3c",
+														"exec": [
+															"pm.test(\"Status code is 204\", function () {",
+															"    pm.response.to.have.status(204);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{idToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "https://{{HOST_NAME}}/provider/{{providerId}}",
+													"protocol": "https",
+													"host": [
+														"{{HOST_NAME}}"
+													],
+													"path": [
+														"provider",
+														"{{providerId}}"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Provider should not longer exist",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "0513317a-3b59-4011-90ba-6a9a5f91eb2b",
+														"exec": [
+															"pm.test(\"Status code is 404\", function () {",
+															"    pm.response.to.have.status(404);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{idToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "https://{{HOST_NAME}}/provider/{{providerId}}",
+													"protocol": "https",
+													"host": [
+														"{{HOST_NAME}}"
+													],
+													"path": [
+														"provider",
+														"{{providerId}}"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "User profile should have isProvider = false",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "38a628d5-03fd-48f3-9c1b-ea7a63887154",
+														"exec": [
+															"pm.test(\"Status code is 200\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response should have profile with isProvider === false\", function () {",
+															"    const data = pm.response.json();",
+															"    pm.expect(data).to.include.keys(\"isProvider\");",
+															"    pm.expect(data.isProvider).to.be.false;",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"id": "02972d07-3c8d-4a9e-a0af-dc713fdde09d",
+														"exec": [
+															"setTimeout(() => {",
+															"    console.log(\"Timeout exceeded attempting request\")",
+															"}, 15000);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{idToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "https://{{HOST_NAME}}/profile/1",
+													"protocol": "https",
+													"host": [
+														"{{HOST_NAME}}"
+													],
+													"path": [
+														"profile",
+														"1"
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								},
 								{
 									"name": "Access Token",
 									"event": [
