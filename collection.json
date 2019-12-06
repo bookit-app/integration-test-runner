@@ -1723,6 +1723,16 @@
 																],
 																"type": "text/javascript"
 															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"id": "a6dcdb52-e52c-4b12-bcce-55527f3f9154",
+																"exec": [
+																	"pm.environment.set(\"random_ein\", `${_.random(0, 9)}${_.random(0, 9)}-${_.random(0, 9)}${_.random(0, 9)}${_.random(0, 9)}${_.random(0, 9)}${_.random(0, 9)}${_.random(0, 9)}${_.random(0, 9)}`)"
+																],
+																"type": "text/javascript"
+															}
 														}
 													],
 													"request": {
@@ -1752,7 +1762,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"ein\": \"99-9999999\",\n\t\"businessName\": \"Test Business\",\n\t\"email\": \"test@test.com\",\n\t\"phoneNumber\": \"123-123-1234\",\n\t\"address\": {\n\t\t\"streetAddress\": \"1234 TEST Street\",\n\t\t\"city\": \"TEST CITY\",\n\t\t\"state\": \"TC\",\n\t\t\"zip\": \"99999\"\n\t}\n}",
+															"raw": "{\n\t\"ein\": \"{{random_ein}}\",\n\t\"businessName\": \"Test Business\",\n\t\"email\": \"test@test.com\",\n\t\"phoneNumber\": \"123-123-1234\",\n\t\"address\": {\n\t\t\"streetAddress\": \"1234 TEST Street\",\n\t\t\"city\": \"TEST CITY\",\n\t\t\"state\": \"TC\",\n\t\t\"zip\": \"99999\"\n\t}\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -1787,7 +1797,7 @@
 																	"pm.test(\"Response includes the provider information\", function () {",
 																	"    const data = pm.response.json();",
 																	"    pm.expect(data).to.include.keys(\"ein\");",
-																	"    pm.expect(data.ein).to.equal('99-9999999')",
+																	"    pm.expect(data.ein).to.equal(pm.environment.get('random_ein'));",
 																	"    pm.expect(data).to.include.keys(\"businessName\");",
 																	"    pm.expect(data).to.include.keys(\"email\");",
 																	"    pm.expect(data).to.include.keys(\"address\");",
@@ -2000,7 +2010,7 @@
 														],
 														"body": {
 															"mode": "raw",
-															"raw": "{\n\t\"ein\": \"99-9999999\",\n\t\"businessName\": \"Test Business\",\n\t\"email\": \"test@test.com\",\n\t\"phoneNumber\": \"123-123-1234\",\n\t\"address\": {\n\t\t\"streetAddress\": \"1234 TEST Street\",\n\t\t\"city\": \"TEST CITY\",\n\t\t\"state\": \"TC\",\n\t\t\"zip\": \"99999\"\n\t}\n}",
+															"raw": "{\n\t\"ein\": \"{{random_ein}}\",\n\t\"businessName\": \"Test Business\",\n\t\"email\": \"test@test.com\",\n\t\"phoneNumber\": \"123-123-1234\",\n\t\"address\": {\n\t\t\"streetAddress\": \"1234 TEST Street\",\n\t\t\"city\": \"TEST CITY\",\n\t\t\"state\": \"TC\",\n\t\t\"zip\": \"99999\"\n\t}\n}",
 															"options": {
 																"raw": {
 																	"language": "json"
@@ -4881,17 +4891,6 @@
 															"script": {
 																"id": "50321b79-c795-437c-ad20-0a3e7d1f5a11",
 																"exec": [
-																	"pm.environment.set(\"random_day\", _.random(0, 6))",
-																	"pm.environment.set(\"random_birthday\", `${_.random(1975, 2005)}-${_.random(10, 12)}-${_.random(10, 28)}`)",
-																	"pm.environment.set(\"random_phone\", `${_.random(100, 999)}-${_.random(100, 999)}-${_.random(1000, 9999)}`)",
-																	"",
-																	"if(_.random(1, 10) >= 5){",
-																	"    pm.environment.set(\"random_gender\", 'M');",
-																	"}",
-																	"else{",
-																	"    pm.environment.set(\"random_gender\", 'F');",
-																	"}",
-																	"",
 																	"const d = new Date();",
 																	"pm.environment.set(\"appointment_date\", `${d.getFullYear()}-${d.getMonth() + 1}-${d.toLocaleDateString('en-US', { day: '2-digit' })}`)",
 																	""
@@ -4950,24 +4949,16 @@
 											"name": "User should not be able to book an appointment for an already booked timeslot",
 											"item": [
 												{
-													"name": "Create a Appointment",
+													"name": "Create a Appointment should fail",
 													"event": [
 														{
 															"listen": "test",
 															"script": {
 																"id": "a892457e-bfdd-4ba4-8baa-b1ed3e0e38c0",
 																"exec": [
-																	"pm.test(\"Status code is 201\", function () {",
-																	"    pm.response.to.have.status(201);",
-																	"});",
-																	"",
-																	"// Populate the ID to the env. Pull from location header and split it at /appointments/[1]",
-																	"const headerList = pm.response.headers;",
-																	"const locationHeader = headerList.get('location');",
-																	"if(locationHeader){",
-																	"    const providerId = locationHeader.split('/appointments/')[1];",
-																	"    pm.environment.set(\"appointmentId\", providerId);",
-																	"}"
+																	"pm.test(\"Status code is 400\", function () {",
+																	"    pm.response.to.have.status(400);",
+																	"});"
 																],
 																"type": "text/javascript"
 															}
@@ -5502,10 +5493,9 @@
 																	"    pm.response.to.have.status(200);",
 																	"});",
 																	"",
-																	"pm.test(\"Should have the one appointment that was created\", function() {",
+																	"pm.test(\"Should have no appointments\", function() {",
 																	"    const data = pm.response.json();",
-																	"    pm.expect(data.length).to.be.gt(0);",
-																	"    pm.expect(data.find(appointment => appointment.appointmentId === pm.environment.get('appointmentId'))).to.be.undefined;",
+																	"    pm.expect(data.length).to.equal(0);",
 																	"})"
 																],
 																"type": "text/javascript"
