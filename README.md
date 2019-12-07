@@ -16,7 +16,7 @@ The list below is the high level listing of the test scenarios covered. Both pos
 
 - Security Tests
 
-  - All API's are invoked with the same set of security testing
+  - All APIs are invoked with the same set of security testing
 
 - Profile Related Tests
 
