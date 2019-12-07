@@ -65,7 +65,7 @@ function processFailures(summary) {
         to: properties.developers
       },
       locals: {
-        report: 'https://storage.cloud.google.com/bookit-integration-test-runner-output/report.html'
+        report: 'https://storage.cloud.google.com/bookit-integration-test-runner-output/report.html',
         collection: summary.collection.name,
         executions: summary.run.executions.length,
         failures: summary.run.failures,
