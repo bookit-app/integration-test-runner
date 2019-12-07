@@ -2,9 +2,13 @@
 
 # integration-test-runner
 
-Latest Results: [here](https://console.cloud.google.com/cloud-build/builds?project=bookit-app-260021&query=tags%3D%20%22integration-tests%22)
-
 Tool to run the backend integration test suite for the book it application. The test runner wraps a Postman collection which contains the automated API, System and Integration tests developed for the project. The application is put into a docker image and automatically triggered via a scheduled job and cloud build on GCP. If any of the tests fail emails are generated to a pre-determined list of recipients with the details of the failures.
+
+## Test Report
+
+The test execution generates a test results report and stores this into a secured Cloud Storage bucket. The report can be accessed at the below link if you have proper access rights.
+
+- [Test Results Report](https://storage.cloud.google.com/bookit-integration-test-runner-output/report.html)
 
 ## Test Scenarios Covered
 
@@ -42,12 +46,6 @@ The list below is the high level listing of the test scenarios covered. Both pos
   - User should be able to add a note to an appointment
   - User should be able to find existing appointments for a provider
   - User should be able to cancel an appointment
-
-## Test Report
-
-The test execution generates a test results report and stores this into a secured Cloud Storage bucket. The report can be accessed at the below link.
-
-- [Test Results Report](https://storage.cloud.google.com/bookit-integration-test-runner-output/report.html)
 
 ## Sample Email
 
