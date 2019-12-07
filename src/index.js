@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const mg = require('nodemailer-mailgun-transport');
+const { Storage } = require('@google-cloud/storage');
 
 let mailTransport;
 
@@ -14,14 +15,22 @@ newman
   .run({
     collection: require('../collection.json'),
     environment: require('../run-env.json'),
-    delayRequest: 250,
-    reporters: 'cli'
+    delayRequest: 0,
+    reporters: ['cli', 'html'],
+    reporter: {
+      html: {
+        export: './results/report.html',
+        template: './reporter-template.hbs'
+      }
+    }
   })
   .on('start', function(err, args) {
     // on start of run, log to console
     console.log('running a collection...');
   })
   .on('done', async (err, summary) => {
+    await publishReport(!summary.run.failures.length > 0);
+
     if (summary.run.failures.length > 0) {
       await processFailures(summary);
       process.exit(1);
@@ -56,16 +65,16 @@ function processFailures(summary) {
         to: properties.developers
       },
       locals: {
+        report: 'https://storage.cloud.google.com/bookit-integration-test-runner-output/report.html'
         collection: summary.collection.name,
         executions: summary.run.executions.length,
         failures: summary.run.failures,
-        timings: summary.run.timings        
+        timings: summary.run.timings
       }
     })
     .then(console.log)
     .catch(console.error);
 }
-
 function getMailTransport(properties) {
   const auth = {
     auth: {
@@ -79,4 +88,18 @@ function getMailTransport(properties) {
   }
 
   return mailTransport;
+}
+
+async function publishReport(success) {
+  // Publish the function to cloud storage
+  const storage = new Storage();
+  const bucket = storage.bucket('bookit-integration-test-runner-output');
+  const iconFilePath = success
+    ? path.join(__dirname, '/../icons/passing.svg')
+    : path.join(__dirname, '/../results/failing.svg');
+
+  return Promise.all([
+    bucket.upload(path.join(__dirname, '/../results/report.html')),
+    bucket.upload(iconFilePath, { destination: 'badge.svg', public: true })
+  ]);
 }
