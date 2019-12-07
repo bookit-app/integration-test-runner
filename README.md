@@ -12,7 +12,7 @@ The test execution generates a test results report and stores this into a secure
 
 ## Test Scenarios Covered
 
-The list below is the high level listing of the test scenarios covered. Both positive and negative test scenarios are executed:
+The list below is the high level listing of the test scenarios covered. Both positive and negative test scenarios are executed in total there are `212` test scripts which are executed with the current version.
 
 - Security Tests
 
