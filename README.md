@@ -1,4 +1,4 @@
-[![Test Status](https://storage.cloud.google.com/bookit-integration-test-runner-output/badge.svg)](https://storage.cloud.google.com/bookit-integration-test-runner-output/badge.svg)
+[![Test Status](https://storage.googleapis.com/bookit-integration-test-runner-output/badge.svg)](https://storage.googleapis.com/bookit-integration-test-runner-output/badge.svg)
 
 # integration-test-runner
 
