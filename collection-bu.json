@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "3a885d20-2ef2-4914-b74a-410994fcd2cc",
-		"name": "bookit-api-prime",
+		"name": "bookit-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -558,7 +558,7 @@
 											"name": "User should be able to create a profile",
 											"item": [
 												{
-													"name": "Create a Profile - TC215,TC216,TC243, TC253. TC254",
+													"name": "Create a Profile",
 													"event": [
 														{
 															"listen": "test",
@@ -616,7 +616,7 @@
 													"response": []
 												},
 												{
-													"name": "Query for a Profile - TC215,TC216,TC243, TC253",
+													"name": "Query for a Profile",
 													"event": [
 														{
 															"listen": "test",
@@ -684,7 +684,7 @@
 											"name": "User should be able to Query their profile",
 											"item": [
 												{
-													"name": "Query for a Profile - TC215,TC216,TC243, TC253",
+													"name": "Query for a Profile",
 													"event": [
 														{
 															"listen": "test",
@@ -752,7 +752,7 @@
 											"name": "User should be able to update their profile",
 											"item": [
 												{
-													"name": "Update a Profile Gender - TC281",
+													"name": "Update a Profile Gender",
 													"event": [
 														{
 															"listen": "test",
@@ -810,7 +810,7 @@
 													"response": []
 												},
 												{
-													"name": "Gender should be changed to O - TC218",
+													"name": "Gender should be changed to O",
 													"event": [
 														{
 															"listen": "test",
@@ -859,7 +859,7 @@
 													"response": []
 												},
 												{
-													"name": "Update a Profile Phone Number - TC218",
+													"name": "Update a Profile Phone Number",
 													"event": [
 														{
 															"listen": "test",
@@ -917,7 +917,7 @@
 													"response": []
 												},
 												{
-													"name": "Phone Number should be 999-999-9999 - TC218",
+													"name": "Phone Number should be 999-999-9999",
 													"event": [
 														{
 															"listen": "test",
@@ -966,7 +966,7 @@
 													"response": []
 												},
 												{
-													"name": "Update a Profile Address - TC218",
+													"name": "Update a Profile Address",
 													"event": [
 														{
 															"listen": "test",
@@ -1024,7 +1024,7 @@
 													"response": []
 												},
 												{
-													"name": "Address should be updated - TC218",
+													"name": "Address should be updated",
 													"event": [
 														{
 															"listen": "test",
@@ -1078,7 +1078,7 @@
 													"response": []
 												},
 												{
-													"name": "Update birthday - TC218",
+													"name": "Update birthday",
 													"event": [
 														{
 															"listen": "test",
@@ -1136,7 +1136,7 @@
 													"response": []
 												},
 												{
-													"name": "Birthday should be updated to 2000-05-01 - TC218",
+													"name": "Birthday should be updated to 2000-05-01",
 													"event": [
 														{
 															"listen": "test",
@@ -1185,7 +1185,7 @@
 													"response": []
 												},
 												{
-													"name": "User should not be able to change their email - TC276",
+													"name": "User should not be able to change their email",
 													"event": [
 														{
 															"listen": "test",
@@ -1243,7 +1243,7 @@
 													"response": []
 												},
 												{
-													"name": "User should not be able to change their name - TC278",
+													"name": "User should not be able to change their name",
 													"event": [
 														{
 															"listen": "test",
@@ -1315,7 +1315,7 @@
 											"name": "Refresh Access Token",
 											"item": [
 												{
-													"name": "Access Token - TC255,TC277,TC282",
+													"name": "Access Token",
 													"event": [
 														{
 															"listen": "test",
@@ -1378,7 +1378,7 @@
 											"name": "User should be able to access provider config",
 											"item": [
 												{
-													"name": "User can access Style Configuration data - TC228",
+													"name": "User can access Style Configuration data",
 													"event": [
 														{
 															"listen": "test",
@@ -1426,7 +1426,7 @@
 													"response": []
 												},
 												{
-													"name": "User can access Staff Classification Configuration data - TC228",
+													"name": "User can access Staff Classification Configuration data",
 													"event": [
 														{
 															"listen": "test",
@@ -1482,7 +1482,7 @@
 											"name": "User should be able to create a provider",
 											"item": [
 												{
-													"name": "Create Service Provider - TC245",
+													"name": "Create Service Provider",
 													"event": [
 														{
 															"listen": "test",
@@ -1563,7 +1563,7 @@
 													"response": []
 												},
 												{
-													"name": "Find the provider which was just created - TC247",
+													"name": "Find the provider which was just created",
 													"event": [
 														{
 															"listen": "test",
@@ -1619,7 +1619,7 @@
 													"response": []
 												},
 												{
-													"name": "User profile should have isProvider = true - TC246",
+													"name": "User profile should have isProvider = true",
 													"event": [
 														{
 															"listen": "test",
@@ -1687,7 +1687,7 @@
 											"name": "User should not be able to create a provider with the same EIN code",
 											"item": [
 												{
-													"name": "Create Service Provider should fail - TC247",
+													"name": "Create Service Provider should fail",
 													"event": [
 														{
 															"listen": "test",
@@ -1779,7 +1779,7 @@
 											"name": "User should be able to create service offerings on the provider",
 											"item": [
 												{
-													"name": "Create Service Provider Offering FADE - TC227",
+													"name": "Create Service Provider Offering FADE",
 													"event": [
 														{
 															"listen": "test",
@@ -1861,7 +1861,7 @@
 													"response": []
 												},
 												{
-													"name": "Create Service Provider Offering UPDO - TC227",
+													"name": "Create Service Provider Offering UPDO",
 													"event": [
 														{
 															"listen": "test",
@@ -1926,7 +1926,7 @@
 													"response": []
 												},
 												{
-													"name": "Create Service Provider Offering CUSTOM - TC227",
+													"name": "Create Service Provider Offering CUSTOM",
 													"event": [
 														{
 															"listen": "test",
@@ -1991,7 +1991,7 @@
 													"response": []
 												},
 												{
-													"name": "Verify Offerings are created and returned with provider - TC227",
+													"name": "Verify Offerings are created and returned with provider",
 													"event": [
 														{
 															"listen": "test",
@@ -2085,7 +2085,7 @@
 											"name": "User should be able to search for and find the provider created",
 											"item": [
 												{
-													"name": "Search by zip code - TC218",
+													"name": "Search by zip code",
 													"event": [
 														{
 															"listen": "test",
@@ -2147,7 +2147,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by state - TC218",
+													"name": "Search by state",
 													"event": [
 														{
 															"listen": "test",
@@ -2209,7 +2209,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by city - TC218",
+													"name": "Search by city",
 													"event": [
 														{
 															"listen": "test",
@@ -2271,7 +2271,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by business name - TC218,TC268,TC226",
+													"name": "Search by business name",
 													"event": [
 														{
 															"listen": "test",
@@ -2333,7 +2333,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by styles = FADE - TC218,TC258",
+													"name": "Search by styles = FADE",
 													"event": [
 														{
 															"listen": "test",
@@ -2395,7 +2395,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by styles = UPDO - TC218",
+													"name": "Search by styles = UPDO",
 													"event": [
 														{
 															"listen": "test",
@@ -2457,7 +2457,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by combination - TC218,TC267",
+													"name": "Search by combination",
 													"event": [
 														{
 															"listen": "test",
@@ -2527,7 +2527,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by combination but not find the created provider - TC218",
+													"name": "Search by combination but not find the created provider",
 													"event": [
 														{
 															"listen": "test",
@@ -2593,7 +2593,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $ - State is also set to make sure we get expected results - TC218,TC259,TC266",
+													"name": "Search by price range $ - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -2678,7 +2678,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$ - State is also set to make sure we get expected results - TC218,TC266",
+													"name": "Search by price range $$ - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -2763,7 +2763,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$$ - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $$$ - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -2847,7 +2847,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$$$ - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $$$$ - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -2931,7 +2931,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3020,7 +3020,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $ and Style = UPDO - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $ and Style = UPDO - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3100,7 +3100,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3189,7 +3189,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$ and Style = UPDO - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $$ and Style = UPDO - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3307,7 +3307,7 @@
 											"name": "User should be able to update service offerings",
 											"item": [
 												{
-													"name": "Load the FADE service - TC227",
+													"name": "Load the FADE service",
 													"event": [
 														{
 															"listen": "test",
@@ -3370,7 +3370,7 @@
 													"response": []
 												},
 												{
-													"name": "Update Service Provider Offering - TC228",
+													"name": "Update Service Provider Offering",
 													"event": [
 														{
 															"listen": "test",
@@ -3431,7 +3431,7 @@
 													"response": []
 												},
 												{
-													"name": "Verify Service Offering has been updated - TC227",
+													"name": "Verify Service Offering has been updated",
 													"event": [
 														{
 															"listen": "test",
@@ -3496,7 +3496,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $ and Style = FADE - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3576,7 +3576,7 @@
 													"response": []
 												},
 												{
-													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results - TC218",
+													"name": "Search by price range $$ and Style = FADE - State is also set to make sure we get expected results",
 													"event": [
 														{
 															"listen": "test",
@@ -3672,7 +3672,7 @@
 											"name": "User should be able to create a Staff Membership Request",
 											"item": [
 												{
-													"name": "Create Staff Member User - TC230,TC237",
+													"name": "Create Staff Member User",
 													"event": [
 														{
 															"listen": "prerequest",
@@ -3743,7 +3743,7 @@
 													"response": []
 												},
 												{
-													"name": "Create a Profile for Staff Member - TC230,TC238",
+													"name": "Create a Profile for Staff Member",
 													"event": [
 														{
 															"listen": "test",
@@ -3801,7 +3801,7 @@
 													"response": []
 												},
 												{
-													"name": "Create Staff Membership Request - TC230",
+													"name": "Create Staff Membership Request",
 													"event": [
 														{
 															"listen": "test",
@@ -3866,7 +3866,7 @@
 											"name": "Requested Staff Member should find their open request",
 											"item": [
 												{
-													"name": "Query for Staff Membership Requests - TC230",
+													"name": "Query for Staff Membership Requests",
 													"event": [
 														{
 															"listen": "test",
@@ -3928,7 +3928,7 @@
 											"name": "Staff Member should be able to accept the membership request to join the providers team",
 											"item": [
 												{
-													"name": "Query for Staff Membership Requests - TC230",
+													"name": "Query for Staff Membership Requests",
 													"event": [
 														{
 															"listen": "test",
@@ -3995,7 +3995,7 @@
 													"response": []
 												},
 												{
-													"name": "Accept Staff memberhip request - TC230",
+													"name": "Accept Staff memberhip request",
 													"event": [
 														{
 															"listen": "test",
@@ -4054,7 +4054,7 @@
 													"response": []
 												},
 												{
-													"name": "Verify Staff member is associated with Service Provider - TC230",
+													"name": "Verify Staff member is associated with Service Provider",
 													"event": [
 														{
 															"listen": "test",
@@ -4201,7 +4201,7 @@
 													"response": []
 												},
 												{
-													"name": "Create a Profile - TC215,TC216,TC243, TC253. TC254",
+													"name": "Create a Profile",
 													"event": [
 														{
 															"listen": "test",
@@ -4286,7 +4286,7 @@
 											"name": "User should be able Create a new appointment",
 											"item": [
 												{
-													"name": "Create a Appointment - TC219,TC260",
+													"name": "Create a Appointment",
 													"event": [
 														{
 															"listen": "test",
@@ -4371,7 +4371,7 @@
 											"name": "User should not be able to book an appointment for an already booked timeslot",
 											"item": [
 												{
-													"name": "Create a Appointment should fail - TC260",
+													"name": "Create a Appointment should fail",
 													"event": [
 														{
 															"listen": "test",
@@ -4446,7 +4446,7 @@
 											"name": "User should be able to find their appointments",
 											"item": [
 												{
-													"name": "Search for My Appointments for the provider and staff member - TC220, TC229",
+													"name": "Search for My Appointments for the provider and staff member",
 													"event": [
 														{
 															"listen": "test",
@@ -4526,7 +4526,7 @@
 													"response": []
 												},
 												{
-													"name": "Search for My Appointments by date range - TC263",
+													"name": "Search for My Appointments by date range",
 													"event": [
 														{
 															"listen": "test",
@@ -4613,7 +4613,7 @@
 											"name": "Staff member should be able to change the status on an appointment",
 											"item": [
 												{
-													"name": "Set appointment status to delayed with a comment - TC241, TC232",
+													"name": "Set appointment status to delayed with a comment",
 													"event": [
 														{
 															"listen": "test",
@@ -4701,7 +4701,7 @@
 											"name": "User should be able to add a note to an appointment",
 											"item": [
 												{
-													"name": "Set a note on the appointment - TC261, TC225",
+													"name": "Set a note on the appointment",
 													"event": [
 														{
 															"listen": "test",
@@ -4767,7 +4767,7 @@
 											"name": "User should be able to find existing appointments for a provider",
 											"item": [
 												{
-													"name": "Search for all appointments of the provider - TC274, TC240",
+													"name": "Search for all appointments of the provider",
 													"event": [
 														{
 															"listen": "test",
@@ -4845,7 +4845,7 @@
 											"name": "User should be able to cancel an appointment",
 											"item": [
 												{
-													"name": "Cancel the appointment - TC222,TC270,TC233",
+													"name": "Cancel the appointment",
 													"event": [
 														{
 															"listen": "test",
@@ -4904,7 +4904,7 @@
 													"response": []
 												},
 												{
-													"name": "Appointment should no longer exist - TC270",
+													"name": "Appointment should no longer exist",
 													"event": [
 														{
 															"listen": "test",
@@ -5571,7 +5571,7 @@
 											"response": []
 										},
 										{
-											"name": "Provider should no longer exist - TC235",
+											"name": "Provider should no longer exist",
 											"event": [
 												{
 													"listen": "test",
@@ -5939,28 +5939,6 @@
 				}
 			],
 			"protocolProfileBehavior": {}
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "47650c2c-81e0-45b7-a661-0c002f7c9df9",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"id": "b505a0b7-e2a8-41d9-b0c1-43ec14647e92",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
 		}
 	],
 	"protocolProfileBehavior": {}
