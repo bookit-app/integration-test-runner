@@ -16,6 +16,6 @@
     "newman-reporter-html": "^1.0.5",
     "nodemailer": "^6.3.1",
     "nodemailer-mailgun-transport": "^1.4.0",
-    "pug": "^2.0.4"
+    "pug": "^3.0.1"
   }
 }
